@@ -16,24 +16,33 @@
             </div>
         </form>
         <Register v-if="showRegister" @toggleRegister="toggleRegister"></Register>
+        <div v-if="loginSuccesfull" class="w3-panel w3-pale-green w3-border">
+            <h3>Login succesfull!</h3>
+        </div>
+        <div v-if="errorLogin" class="w3-panel w3-pale-red w3-border">
+            <h3>Bad credintials or account don't exists!</h3>
+        </div>
     </div>
 </template>
 
 <script>
-import Register from './Register';
+import Register from "./Register";
+import axios from 'axios';
+import EventBus from "../classes/eventBus.js";
 
 export default {
   name: "Login",
   components: {
-      Register
+    Register
   },
-  onCreated(){
-  },
+  onCreated() {},
   data() {
     return {
       password: "",
       email: "",
-      showRegister: false
+      showRegister: false,
+      loginSuccesfull: false,
+      errorLogin: false
     };
   },
   methods: {
@@ -41,9 +50,28 @@ export default {
       const { email, password } = this;
       console.log(email);
       console.log(password);
+      axios
+        .post("http://localhost:5000/login", {
+          email: email,
+          password: password
+        })
+        .then(response => {
+          this.loginSuccesfull = true;
+          this.errorLogin = false;
+          let token = response.data.token
+
+          setTimeout( () => {
+              EventBus.$emit('loggedIn', token)
+          }, 1000)
+        })
+        .catch(e => {
+          this.errorLogin = true;
+          this.loginSuccesfull = false;
+          //this.errors.push(e);
+        });
     },
     toggleRegister: function() {
-        this.showRegister = !this.showRegister
+      this.showRegister = !this.showRegister;
     }
   }
 };

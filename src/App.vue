@@ -4,21 +4,36 @@
       <span>Drivepack App</span>
     </header>
     <main>
-        <Login></Login>
+        <Login  v-if="!token"></Login>
+        <Main v-if="token" :token="token"></Main>
     </main>
   </div>
 </template>
 
 <script>
 import Login from './components/Login';
+import Main from './components/Main';
+
+import EventBus from "./classes/eventBus.js";
 
 export default {
   name: 'app',
   components: {
-      Login
+      Login,
+      Main
+  },
+  data() {
+    return {
+      token: null
+    };
   },
   created: function() {
       this.backendUrl = "localhost:5000"
+
+    EventBus.$on('loggedIn', message => {
+        console.log("Logged in token: " + message)
+        this.token = message
+    })
   }
 }
 </script>

@@ -4,7 +4,7 @@
             <div class="modal-backdrop">
                 <div class="modal">
                     <header class="modal-header">
-                        <h1>Register</h1>
+                        <h3>Register</h3>
                     </header>
                     <section class="modal-body w3-center">
                         <slot name="body">
@@ -34,7 +34,10 @@
                                         <label><b>Repeat password</b></label><br>
                                         <input required v-model="passwordRepeat" type="password" placeholder="Password" class="w3-input w3-border w3-margin-bottom"/>
                                     </div>
-                                    <button type="submit" class="w3-button w3-block w3-green w3-section w3-padding">Register</button>
+                                    <button v-if="!registrationSuccessful" type="submit" class="w3-button w3-block w3-green w3-section w3-padding">Register</button>
+                                    <div v-if="registrationSuccessful" class="w3-panel w3-pale-green w3-border">
+                                        <h3>Registration succesfull!</h3>
+                                    </div>
                                 </div>
                             </form>
                         </slot>
@@ -53,7 +56,7 @@
 </template>
 
 <style scoped>
-h1 {
+h3 {
     margin: auto
 }
 .modal-backdrop {
@@ -153,7 +156,8 @@ export default {
       name: "",
       surrname: "",
       password: "",
-      passwordRepeat: ""
+      passwordRepeat: "",
+      registrationSuccessful: false
     };
   },
   methods: {
@@ -170,7 +174,15 @@ export default {
             surrname: surrname,
             password: password
       })
-      .then(response => {console.log(response)})
+      .then(response => {
+          this.registrationSuccessful = true
+          this.username= ""
+          this.email= ""
+          this.name= ""
+          this.surrname= ""
+          this.password= ""
+          this.passwordRepeat= ""
+        })
       .catch(e => {
         this.errors.push(e)
       })

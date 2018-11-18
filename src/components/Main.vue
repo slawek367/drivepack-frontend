@@ -4,15 +4,16 @@
         <header>
             <span class="w3-left">Menu</span>
         </header>
-        <div v-if="!addPackageFlag" id="main">
+        <div v-if="!addPackageFlag || !yourPackagesFlag" id="main">
             <h2> Welcome {{ userName }}!</h2>
             <div id="button-container">
                 <button v-on:click="addPackageFlag = !addPackageFlag" class="w3-button w3-block w3-green w3-section w3-padding">Add Package</button>
-                <button v-on:click="addPackageFlag = !addPackageFlag" class="w3-button w3-block w3-green w3-section w3-padding">Your Packages</button>
+                <button v-on:click="yourPackagesFlag = !yourPackagesFlag" class="w3-button w3-block w3-green w3-section w3-padding">Your Packages</button>
                 <button v-on:click="addPackageFlag = !addPackageFlag" class="w3-button w3-block w3-green w3-section w3-padding">Settings</button>
             </div>
         </div>
-        <AddPackage v-if="addPackageFlag" @toggleAddPackage="addPackageFlag = !addPackageFlag"></AddPackage>
+        <AddPackage :token="token" v-if="addPackageFlag" @toggleAddPackage="addPackageFlag = !addPackageFlag"></AddPackage>
+        <YourPackages :token="token" v-if="yourPackagesFlag" @toggleYourPackages="yourPackagesFlag = !yourPackagesFlag"></YourPackages>
     </div>
 </template>
 
@@ -42,11 +43,13 @@ header {
 <script>
 import axios from "axios";
 import AddPackage from './AddPackage';
+import YourPackages from './YourPackages';
 
 export default {
   name: "Main",
   components: {
-      AddPackage
+      AddPackage,
+      YourPackages
   },
   props: {
     token: {
@@ -57,7 +60,8 @@ export default {
     return {
       user: null,
       userName: '',
-      addPackageFlag: false
+      addPackageFlag: false,
+      yourPackagesFlag: false
     };
   },
   created: function() {

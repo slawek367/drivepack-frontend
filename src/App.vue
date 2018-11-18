@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header>
+    <header v-if="!token">
       <span>Drivepack App</span>
     </header>
     <main>
@@ -52,7 +52,6 @@ body {
 
 main {
   text-align: center;
-  margin-top: 40px;
 }
 
 header {

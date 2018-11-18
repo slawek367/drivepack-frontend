@@ -35,7 +35,6 @@ export default {
   components: {
     Register
   },
-  onCreated() {},
   data() {
     return {
       password: "",
